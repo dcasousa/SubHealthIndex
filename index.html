@@ -169,8 +169,32 @@
             }
           });
           map.fitBounds(bounds);
-          map.setCenter(map.getCenter());
-          map.setZoom(500);
+          
+          // Display markers for nearby facilities
+          for (var i = 0; i < data.length; i++) {
+            var img;
+            var facility = data[i];
+            
+            switch (facility.Type) {
+              case 'hospital':
+                img = 'img/markers/hospital.png';
+                break;
+              case 'park':
+                img = 'img/markers/playground.png';
+                break;
+              case 'gym':
+                img = 'img/markers/weights.png';
+                break;
+              case 'food':
+                img = 'img/markers/fastfood.png';
+                break;
+            }
+            
+            for (var j = 0; j < facility.place.length; j++) {
+              var place = facility.place[j];
+              addMarker(parseFloat(place.lat), parseFloat(place.long), img);   
+            }
+          }
           
           // Calculate metrics
           var hospitalRanking = data.filter(function(item) {
@@ -191,11 +215,26 @@
           $('#gym-ranking').html(gymRanking + ' / 10');
           $('#food-ranking').html(foodRanking + ' / 10');
           $('#suburb-index').html(index);
+          
           // Scroll to results
           $('html, body').animate({
             scrollTop: $("#map-section").offset().top
           }, 500);
         });
+      }
+      
+      function addMarker(lat, lng, img) {
+        var point = {
+          lat: lat,
+          lng: lng
+        };
+        var marker = new google.maps.Marker({
+          position: point,
+          map: map,
+          icon: img
+        });
+        
+        markers.push(marker);
       }
       
       function initAutocomplete() {
