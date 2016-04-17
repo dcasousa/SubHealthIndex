@@ -73,41 +73,23 @@
           <div class="col-sm-8" id="map"></div>
           <div class="col-sm-4 text-left" id="metrics">
             <h3>Summary</h3>
-            <span id='score'></span>
-            <dl>
-              <dt>
-                Hospitals (private/public)
-              </dt>
-              <dd>
-              </dd>
-              <dt>
-                Pharmacies
-              </dt>
-              <dd>
-              </dd>
-              <dt>
-                Parks
-              </dt>
-              <dd>
-              </dd>
-              <dt>
-                Gym / Fitness centres
-              </dt>
-              <dd>
-              </dd>
-              <dt>
-                Community centres
-              </dt>
-              <dd>
-              </dd>
+            <dl class="dl-horizontal">
+              <dt>Hospitals</dt>
+              <dd id="hospital-ranking"></dd>
+              <dt>Parks</dt>
+              <dd id="park-ranking"></dd>
+              <dt>Gyms</dt>
+              <dd id="gym-ranking"></dd>
             </dl>
             <hr />
-            <dl>
-              <dt>
-                Fast food
-              </dt>
-              <dd>
-              </dd>
+            <dl class="dl-horizontal">
+              <dt>Food</dt>
+              <dd id="food-ranking"></dd>
+            </dl>
+            <hr />
+            <dl class="dl-horizontal">
+              <dt>Index</dt>
+              <dd id="suburb-index"></dd>
             </dl>
           </div>
         </div>
@@ -139,6 +121,7 @@
       var markers = [];
       var input = document.getElementById('pac-input');
       var searchBox;
+      var data = [{"ranking": 5.0, "Type": "hospital", "place": [{"lat": "-37.733728", "long": "145.005741"}, {"lat": "-37.739639", "long": "144.999012"}, {"lat": "-37.7369407", "long": "144.9954075"}, {"lat": "-37.7380808", "long": "145.0030766"}, {"lat": "-37.739217", "long": "145.003396"}, {"lat": "-37.74451560000001", "long": "144.9990728"}]}, {"ranking": 3.0, "Type": "park", "place": [{"lat": "-37.7415544", "long": "144.9961242"}, {"lat": "-37.729922", "long": "144.9919925"}]}, {"ranking": 3.0, "Type": "gym", "place": [{"lat": "-37.7369572", "long": "145.0040335"}, {"lat": "-37.741112", "long": "145.004475"}, {"lat": "-37.732647", "long": "145.004632"}, {"lat": "-37.7442459", "long": "145.0026156"}, {"lat": "-37.74322259999999", "long": "145.0059871"}]}, {"ranking": 4.0, "Type": "food", "place": [{"lat": "-37.7395758", "long": "145.00333"}, {"lat": "-37.742421", "long": "145.0035821"}, {"lat": "-37.7448867", "long": "145.0033737"}, {"lat": "-37.7393115", "long": "145.0040785"}, {"lat": "-37.74319", "long": "145.003527"}, {"lat": "-37.7371695", "long": "145.0028402"}, {"lat": "-37.7377462", "long": "145.0026792"}, {"lat": "-37.74065", "long": "145.002629"}, {"lat": "-37.7445204", "long": "144.9985918"}, {"lat": "-37.7421621", "long": "145.0034938"}, {"lat": "-37.744825", "long": "144.996941"}, {"lat": "-37.7392742", "long": "145.0003809"}, {"lat": "-37.732544", "long": "145.005236"}, {"lat": "-37.735431", "long": "144.9907171"}, {"lat": "-37.7368642", "long": "145.0040681"}, {"lat": "-37.7430701", "long": "145.0034769"}, {"lat": "-37.732124", "long": "145.004685"}, {"lat": "-37.742694", "long": "145.002844"}, {"lat": "-37.7424842", "long": "144.9979997"}, {"lat": "-37.7363416", "long": "144.9901558"}]}];
       
       function initialize() {
         initAutocomplete();
@@ -151,6 +134,7 @@
         });
         
         searchBox.addListener('places_changed', function() {
+          var address = input.value;
           var places = searchBox.getPlaces();
           if (places.length == 0) {
             return;
@@ -188,7 +172,26 @@
           map.setCenter(map.getCenter());
           map.setZoom(500);
           
-          // Scroll to element
+          // Calculate metrics
+          var hospitalRanking = data.filter(function(item) {
+            return item.Type === 'hospital'
+          })[0].ranking;
+          var parkRanking = data.filter(function(item) {
+            return item.Type === 'park'
+          })[0].ranking;
+          var gymRanking = data.filter(function(item) {
+            return item.Type === 'gym'
+          })[0].ranking;
+          var foodRanking = data.filter(function(item) {
+            return item.Type === 'food'
+          })[0].ranking;
+          var index = (hospitalRanking + parkRanking + gymRanking - foodRanking) / 4;
+          $('#hospital-ranking').html(hospitalRanking + ' / 10');
+          $('#park-ranking').html(parkRanking + ' / 10');
+          $('#gym-ranking').html(gymRanking + ' / 10');
+          $('#food-ranking').html(foodRanking + ' / 10');
+          $('#suburb-index').html(index);
+          // Scroll to results
           $('html, body').animate({
             scrollTop: $("#map-section").offset().top
           }, 500);

@@ -185,7 +185,7 @@ header p {
 	border: 0;
 	margin: 0 8px;
 	font-size: 18px;
-	width: 400px;
+	width: 450px;
 	transition: all 0.5s;
 }
 #map {
@@ -372,7 +372,7 @@ label {
 
 .screen {
 	height: 100vh;
-	padding: 20px 40px;
+	padding: 100px 40px;
 }
 
 #metrics {
