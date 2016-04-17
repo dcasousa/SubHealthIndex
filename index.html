@@ -58,7 +58,7 @@
     </nav>
 
     <!-- Header -->
-    <header class="text-center screen" name="home">
+    <header class="text-center screen" id="home" name="home">
       <div class="intro-text">
         <h1 class="wow fadeInDown"><strong><span class="color">CommHealth</span></strong></h1>
         <p class="wow fadeInDown">Enter an address below</p>
@@ -73,18 +73,18 @@
           <div class="col-sm-8" id="map"></div>
           <div class="col-sm-4 text-left" id="metrics">
             <h2>Summary</h2>
-            <h4>Good</h4>
-            <table id="positive-metrics" class="table">
+            <h4>Positive</h4>
+            <table id="positive-metrics" class="table table-hover">
               <tbody>
               </thead>
             </table>
-            <h4>Bad</h4>
-            <table id="negative-metrics" class="table">
+            <h4>Negative</h4>
+            <table id="negative-metrics" class="table table-hover">
               <tbody>
               </thead>
             </table>
             <h4>Other</h4>
-            <table id="other-metrics" class="table">
+            <table id="other-metrics" class="table table-hover">
               <tbody>
               </thead>
             </table>
@@ -92,6 +92,29 @@
               Index: <span class="text-info" id="suburb-index"></span>
             </div>
           </div>
+        </div>
+        <div>
+          <table class="legend table">
+            <thead>
+              <tr>
+                <th colspan="4" class="text-center">
+                  <h3>Legend</h3>
+                </th>
+              </tr>
+              <tr>
+                <th>1 - 3</th>
+                <th>4 - 6</th>
+                <th>7 - 8</th>
+                <th>9 - 10</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>Below average</td>
+              <td>Average</td>
+              <td>Above average</td>
+              <td>Excellent</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
@@ -264,7 +287,6 @@
             return a + b
           }) / rankings.length;
           
-          console.log(index);
           suburbIndex.html(index.toFixed(1));
           
           // Scroll to results

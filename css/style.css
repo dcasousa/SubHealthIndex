@@ -383,3 +383,8 @@ label {
 .result {
 	font-size: 200%;
 }
+
+table.legend {
+	margin-top: 20px;
+	font-size: 120%;
+}
