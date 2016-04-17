@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Suburb Health Index</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Favicons
+        ================================================== -->
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="img/apple-touch-icon-114x114.png">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css"  href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome/css/font-awesome.css">
+
+    <!-- Stylesheet
+        ================================================== -->
+    <link rel="stylesheet" type="text/css"  href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700,900,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800,600,300' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="js/modernizr.custom.js"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+  </head>
+    <body onload=document.getElementById('pac-input').focus();>
+    <div id="preloader">
+      <div id="status"> <img src="img/preloader.gif" height="64" width="64" alt=""> </div>
+    </div>
+    <!-- Navigation
+        ==========================================-->
+    <nav id="menu" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+          <a class="navbar-brand" href="index.html">Suburb Health Index<strong></strong></a> </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#home" class="page-scroll">Search</a></li>
+            <li><a href="#map-section" class="page-scroll">Map</a></li>
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+
+    <!-- Header -->
+    <header class="text-center screen" name="home">
+      <div class="intro-text">
+        <h1 class="wow fadeInDown"><strong><span class="color">Suburb Health Index</span></strong></h1>
+        <p class="wow fadeInDown">Enter an address below</p>
+        <input id="pac-input" class="searchbox btn btn-lg wow fadeInUp" type="text" placeholder="Search Box" autofocus="autofocus">
+      </div>
+    </header>
+
+    <!-- Map Section -->
+    <div id="map-section" class="text-center screen">
+      <div class="container flexbox">
+        <div id="map"></div>
+        <div id="metrics" class="text-left">
+          <h3>Summary</h3>
+          <span id='score'></span>
+          <dl>
+            <dt>
+              Hospitals (private/public)
+            </dt>
+            <dd>
+            </dd>
+            <dt>
+              Pharmacies
+            </dt>
+            <dd>
+            </dd>
+            <dt>
+              Parks
+            </dt>
+            <dd>
+            </dd>
+            <dt>
+              Gym / Fitness centres
+            </dt>
+            <dd>
+            </dd>
+            <dt>
+              Community centres
+            </dt>
+            <dd>
+            </dd>
+          </dl>
+          <hr />
+          <dl>
+            <dt>
+              Fast food
+            </dt>
+            <dd>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+          <p>Copyright © Tempo. Design by <a href="http://www.templategarden.com" rel="nofollow">TemplateGarden</a></p>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.1.11.1.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/SmoothScroll.js"></script>
+    <script type="text/javascript" src="js/wow.min.js"></script>
+    <script type="text/javascript" src="js/jquery.prettyPhoto.js"></script>
+    <script type="text/javascript" src="js/jquery.isotope.js"></script>
+    <script type="text/javascript" src="js/jqBootstrapValidation.js"></script>
+    <script type="text/javascript" src="js/contact_me.js"></script>
+
+    <!-- Javascripts
+        ================================================== -->
+    <script type="text/javascript" src="js/main.js"></script>
+    <script>
+      var map;
+      var markers = [];
+      var input = document.getElementById('pac-input');
+      var searchBox;
+      
+      function initialize() {
+        initAutocomplete();
+        initMap();
+        searchBox = new google.maps.places.SearchBox(input);
+        
+        // Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function() {
+          searchBox.setBounds(map.getBounds());
+        });
+        
+        searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+          if (places.length == 0) {
+            return;
+          }
+          // Clear out the old markers.
+          markers.forEach(function(marker) {
+            marker.setMap(null);
+          });
+          markers = [];
+          // For each place, get the icon, name and location.
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            var icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+            // Create a marker for each place.
+            markers.push(new google.maps.Marker({
+              map: map,
+              icon: icon,
+              title: place.name,
+              position: place.geometry.location
+            }));
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          map.fitBounds(bounds);
+          
+          // Scroll to element
+          $('html, body').animate({
+            scrollTop: $("#map-section").offset().top
+          }, 500);
+        });
+      }
+      
+      function initAutocomplete() {
+        var options = {
+          componentRestrictions: {country: 'au'}
+        };
+        var searchBox = new google.maps.places.Autocomplete(input, options);
+      }
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -37.8132, lng: 144.963},
+          zoom: 8
+        });
+      };
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe2IGUw8cxA0884HsxlAsw2gkebon7Bjk&libraries=places&callback=initialize"
+        async defer></script>
+  </body>
+</html>
