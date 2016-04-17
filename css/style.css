@@ -102,7 +102,6 @@ hr {
 	border-color: rgba(231, 231, 231, 0);
 }
 #menu a.navbar-brand {
-	text-transform: uppercase;
 	font-size: 22px;
 	color: #d9e0e2;
 	font-weight: 700;
@@ -162,7 +161,6 @@ header p {
 }
 .intro-text H1 {
 	font-size: 70px;
-	text-transform: uppercase;
 	color: #d9e0e2;
 	letter-spacing: 2px;
 }
@@ -377,4 +375,11 @@ label {
 
 #metrics {
 	padding: 5px 10px;
+	padding-left: 40px;
+	font-size: 120%;
+	overflow-y: auto;
+}
+
+.result {
+	font-size: 200%;
 }

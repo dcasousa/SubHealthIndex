@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Suburb Health Index</title>
+    <title>CommHealth</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -43,7 +43,7 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-          <a class="navbar-brand" href="index.html">Suburb Health Index<strong></strong></a> </div>
+          <a class="navbar-brand" href="index.html">CommHealth<strong></strong></a> </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -60,7 +60,7 @@
     <!-- Header -->
     <header class="text-center screen" name="home">
       <div class="intro-text">
-        <h1 class="wow fadeInDown"><strong><span class="color">Suburb Health Index</span></strong></h1>
+        <h1 class="wow fadeInDown"><strong><span class="color">CommHealth</span></strong></h1>
         <p class="wow fadeInDown">Enter an address below</p>
         <input id="pac-input" class="searchbox btn btn-lg wow fadeInUp" type="text" placeholder="Address" autofocus="autofocus">
       </div>
@@ -72,25 +72,25 @@
         <div class="row">
           <div class="col-sm-8" id="map"></div>
           <div class="col-sm-4 text-left" id="metrics">
-            <h3>Summary</h3>
-            <dl class="dl-horizontal">
-              <dt>Hospitals</dt>
-              <dd id="hospital-ranking"></dd>
-              <dt>Parks</dt>
-              <dd id="park-ranking"></dd>
-              <dt>Gyms</dt>
-              <dd id="gym-ranking"></dd>
-            </dl>
-            <hr />
-            <dl class="dl-horizontal">
-              <dt>Food</dt>
-              <dd id="food-ranking"></dd>
-            </dl>
-            <hr />
-            <dl class="dl-horizontal">
-              <dt>Index</dt>
-              <dd id="suburb-index"></dd>
-            </dl>
+            <h2>Summary</h2>
+            <h4>Good</h4>
+            <table id="positive-metrics" class="table">
+              <tbody>
+              </thead>
+            </table>
+            <h4>Bad</h4>
+            <table id="negative-metrics" class="table">
+              <tbody>
+              </thead>
+            </table>
+            <h4>Other</h4>
+            <table id="other-metrics" class="table">
+              <tbody>
+              </thead>
+            </table>
+            <div class="result text-center">
+              Index: <span class="text-info" id="suburb-index"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -120,8 +120,13 @@
       var map;
       var markers = [];
       var input = document.getElementById('pac-input');
+      var positiveMetrics = $('#positive-metrics tbody');
+      var negativeMetrics = $('#negative-metrics tbody');
+      var otherMetrics = $('#other-metrics tbody');
+      var suburbIndex = $('#suburb-index');
+      
       var searchBox;
-      var data = [{"ranking": 5.0, "Type": "hospital", "place": [{"lat": "-37.733728", "long": "145.005741"}, {"lat": "-37.739639", "long": "144.999012"}, {"lat": "-37.7369407", "long": "144.9954075"}, {"lat": "-37.7380808", "long": "145.0030766"}, {"lat": "-37.739217", "long": "145.003396"}, {"lat": "-37.74451560000001", "long": "144.9990728"}]}, {"ranking": 3.0, "Type": "park", "place": [{"lat": "-37.7415544", "long": "144.9961242"}, {"lat": "-37.729922", "long": "144.9919925"}]}, {"ranking": 3.0, "Type": "gym", "place": [{"lat": "-37.7369572", "long": "145.0040335"}, {"lat": "-37.741112", "long": "145.004475"}, {"lat": "-37.732647", "long": "145.004632"}, {"lat": "-37.7442459", "long": "145.0026156"}, {"lat": "-37.74322259999999", "long": "145.0059871"}]}, {"ranking": 4.0, "Type": "food", "place": [{"lat": "-37.7395758", "long": "145.00333"}, {"lat": "-37.742421", "long": "145.0035821"}, {"lat": "-37.7448867", "long": "145.0033737"}, {"lat": "-37.7393115", "long": "145.0040785"}, {"lat": "-37.74319", "long": "145.003527"}, {"lat": "-37.7371695", "long": "145.0028402"}, {"lat": "-37.7377462", "long": "145.0026792"}, {"lat": "-37.74065", "long": "145.002629"}, {"lat": "-37.7445204", "long": "144.9985918"}, {"lat": "-37.7421621", "long": "145.0034938"}, {"lat": "-37.744825", "long": "144.996941"}, {"lat": "-37.7392742", "long": "145.0003809"}, {"lat": "-37.732544", "long": "145.005236"}, {"lat": "-37.735431", "long": "144.9907171"}, {"lat": "-37.7368642", "long": "145.0040681"}, {"lat": "-37.7430701", "long": "145.0034769"}, {"lat": "-37.732124", "long": "145.004685"}, {"lat": "-37.742694", "long": "145.002844"}, {"lat": "-37.7424842", "long": "144.9979997"}, {"lat": "-37.7363416", "long": "144.9901558"}]}];
+      var data = [{"ranking": 8.0, "Type": "hospital", "place": [{"lat": "-37.7174942", "long": "144.998074"}, {"lat": "-37.71708890000001", "long": "144.9966433"}, {"lat": "-37.716676", "long": "145.006176"}]}, {"ranking": 4.0, "Type": "park", "place": [{"lat": "-37.7169681", "long": "144.9938862"}, {"lat": "-37.7115681", "long": "144.9922115"}]}, {"ranking": 4.0, "Type": "gym", "place": [{"lat": "-37.715868", "long": "145.004803"}, {"lat": "-37.715896", "long": "145.004072"}, {"lat": "-37.71363799999999", "long": "144.994258"}, {"lat": "-37.718107", "long": "144.99314"}, {"lat": "-37.71826", "long": "144.99304"}, {"lat": "-37.7149918", "long": "145.0092316"}, {"lat": "-37.718107", "long": "144.99314"}, {"lat": "-37.714952", "long": "145.009239"}, {"lat": "-37.718252", "long": "145.00771"}]}, {"ranking": 5.0, "Type": "food", "place": [{"lat": "-37.715494", "long": "144.990121"}, {"lat": "-37.715747", "long": "145.003372"}, {"lat": "-37.71663979999999", "long": "145.0063493"}, {"lat": "-37.7148727", "long": "145.0070959"}, {"lat": "-37.71580499999999", "long": "145.004209"}, {"lat": "-37.71858659999999", "long": "144.9930297"}, {"lat": "-37.71593610000001", "long": "145.0051431"}, {"lat": "-37.71678300000001", "long": "145.006205"}, {"lat": "-37.71525299999999", "long": "145.000256"}, {"lat": "-37.715314", "long": "144.9954068"}, {"lat": "-37.715602", "long": "145.003266"}, {"lat": "-37.71605530000001", "long": "145.0044641"}, {"lat": "-37.7145804", "long": "145.0072638"}, {"lat": "-37.7193088", "long": "144.9933693"}, {"lat": "-37.71890609999999", "long": "145.0074016"}, {"lat": "-37.716", "long": "145.005"}, {"lat": "-37.715855", "long": "144.998786"}, {"lat": "-37.71871900000001", "long": "144.993698"}, {"lat": "-37.716211", "long": "145.006592"}, {"lat": "-37.717035", "long": "145.00597"}]}, {"ranking": 9, "Type": "Air Quality"}, {"ranking": 5, "Type": "Crime Rate"}]; 
       
       function initialize() {
         initAutocomplete();
@@ -131,6 +136,7 @@
         // Bias the SearchBox results towards current map's viewport.
         map.addListener('bounds_changed', function() {
           searchBox.setBounds(map.getBounds());
+          map.setZoom(15);
         });
         
         searchBox.addListener('places_changed', function() {
@@ -172,7 +178,7 @@
           
           // Display markers for nearby facilities
           for (var i = 0; i < data.length; i++) {
-            var img;
+            var img = '';
             var facility = data[i];
             
             switch (facility.Type) {
@@ -190,31 +196,76 @@
                 break;
             }
             
-            for (var j = 0; j < facility.place.length; j++) {
-              var place = facility.place[j];
-              addMarker(parseFloat(place.lat), parseFloat(place.long), img);   
+            if (facility.place) {
+              for (var j = 0; j < facility.place.length; j++) {
+                var place = facility.place[j];
+                addMarker(parseFloat(place.lat), parseFloat(place.long), img);   
+              }
             }
           }
           
-          // Calculate metrics
+          // Display rankings
+          positiveMetrics.empty();
+          negativeMetrics.empty();
+          otherMetrics.empty();
+          
           var hospitalRanking = data.filter(function(item) {
-            return item.Type === 'hospital'
-          })[0].ranking;
-          var parkRanking = data.filter(function(item) {
-            return item.Type === 'park'
+            return item.Type === 'hospital';
           })[0].ranking;
           var gymRanking = data.filter(function(item) {
-            return item.Type === 'gym'
+            return item.Type === 'gym';
+          })[0].ranking;
+          var parkRanking = data.filter(function(item) {
+            return item.Type === 'park';
           })[0].ranking;
           var foodRanking = data.filter(function(item) {
-            return item.Type === 'food'
+            return item.Type === 'food';
           })[0].ranking;
-          var index = (hospitalRanking + parkRanking + gymRanking - foodRanking) / 4;
-          $('#hospital-ranking').html(hospitalRanking + ' / 10');
-          $('#park-ranking').html(parkRanking + ' / 10');
-          $('#gym-ranking').html(gymRanking + ' / 10');
-          $('#food-ranking').html(foodRanking + ' / 10');
-          $('#suburb-index').html(index);
+          var airQuality = data.filter(function(item) {
+            return item.Type === 'Air Quality';
+          })[0].ranking;
+          var crimeRate = data.filter(function(item) {
+            return item.Type === 'Crime Rate';
+          })[0].ranking;
+          
+          positiveMetrics.append($('<tr class="success">' 
+            + '<td>Hospital</td>'
+            + '<td>' + (hospitalRanking) + '</td>'
+            + '</tr>'));
+          positiveMetrics.append($('<tr class="success">' 
+            + '<td>Gym</td>'
+            + '<td>' + gymRanking + '</td>'
+            + '</tr>'));
+          positiveMetrics.append($('<tr class="success">' 
+            + '<td>Park</td>'
+            + '<td>' + parkRanking + '</td>'
+            + '</tr>'));
+            
+          negativeMetrics.append($('<tr class="danger">' 
+            + '<td>Fast food</td>'
+            + '<td>' + foodRanking + '</td>'
+            + '</tr>'));
+            
+          otherMetrics.append($('<tr class="warning">' 
+            + '<td>Air quality</td>'
+            + '<td>' + airQuality + '</td>'
+            + '</tr>'));
+          otherMetrics.append($('<tr class="warning">' 
+            + '<td>Crime rate</td>'
+            + '<td>' + crimeRate + '</td>'
+            + '</tr>'));
+            
+          // Calculate index
+          var rankings = [];
+          for (var i = 0; i < data.length; i++) {
+            rankings.push(parseFloat(data[i].ranking));
+          }
+          var index = rankings.reduce(function(a, b) {
+            return a + b
+          }) / rankings.length;
+          
+          console.log(index);
+          suburbIndex.html(index.toFixed(1));
           
           // Scroll to results
           $('html, body').animate({
@@ -247,7 +298,7 @@
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -37.8132, lng: 144.963},
-          zoom: 8
+          zoom: 3
         });
       };
     </script>
